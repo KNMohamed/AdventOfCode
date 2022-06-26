@@ -10,7 +10,7 @@ public class Dive {
     public final FileProcessor fileProcessor = new FileProcessor();
     public static final String file = "input2.txt";
 
-    public Integer calculatePosition() throws IOException, URISyntaxException {
+    public Integer partOne() throws IOException, URISyntaxException {
         Integer posY = 0;
         Integer posX = 0;
         List<String> listOfCommands = fileProcessor.processListOfStrings(file);
@@ -41,7 +41,7 @@ public class Dive {
         Dive dive = new Dive();
 
         try {
-            Integer res = dive.calculatePosition();
+            Integer res = dive.partOne();
             System.out.println(res);
 
         } catch (Exception e) {
