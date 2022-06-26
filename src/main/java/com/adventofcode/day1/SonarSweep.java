@@ -1,4 +1,6 @@
-package com.adventofcode;
+package com.adventofcode.day1;
+
+import com.adventofcode.FileProcessor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
