@@ -13,7 +13,7 @@ public class SonarSweep {
     /**
      * Time complexity: O(N)
      */
-    public Integer dayOneDepthCount() throws IOException, URISyntaxException {
+    public Integer partOne() throws IOException, URISyntaxException {
         Integer count = 0;
         List<Integer> depths = fileProcessor.processListOfIntegers(file);
         Integer before = depths.get(0);
@@ -32,7 +32,7 @@ public class SonarSweep {
     /**
      * Time complexity: O(N)
     */
-    public Integer dayTwoDepthCount(int windowSize) throws IOException, URISyntaxException {
+    public Integer partTwo(int windowSize) throws IOException, URISyntaxException {
         Integer count = 0;
         List<Integer> depths = fileProcessor.processListOfIntegers(file);
 
@@ -50,7 +50,7 @@ public class SonarSweep {
     public static void main(String[] args) {
         SonarSweep sonarSweep = new SonarSweep();
         try {
-            Integer res = sonarSweep.dayTwoDepthCount(3);
+            Integer res = sonarSweep.partTwo(3);
             System.out.println(res);
         } catch (IOException e) {
             e.printStackTrace();
