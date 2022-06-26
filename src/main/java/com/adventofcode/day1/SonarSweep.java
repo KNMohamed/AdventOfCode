@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SonarSweep {
     public final FileProcessor fileProcessor = new FileProcessor();
-    public static final String file = "input.txt";
+    public static final String file = "input1.txt";
 
     /**
      * Time complexity: O(N)

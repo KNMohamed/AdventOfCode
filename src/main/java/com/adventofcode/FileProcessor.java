@@ -21,4 +21,13 @@ public class FileProcessor {
 
         return listOfIntegers;
     }
+
+    public List<String> processListOfStrings(String file) throws IOException, URISyntaxException {
+        URL res = getClass().getClassLoader().getResource(file);
+        List<String> listOfStrings = Files.newBufferedReader(Paths.get(res.toURI()))
+                .lines()
+                .collect(Collectors.toList());
+
+        return listOfStrings;
+    }
 }
