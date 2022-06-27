@@ -1,56 +1,105 @@
 package com.adventofcode.day3;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
-import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class BinaryDiagnostic {
-    public static final int BINARY_LENGTH = 12; // Binary string is of length 12
+    public static List<String> getDiagnosticReport(String file) throws URISyntaxException, IOException {
+        URL uri = BinaryDiagnostic.class.getClassLoader().getResource(file);
+        return Files.newBufferedReader(Paths.get(uri.toURI())).lines().collect(Collectors.toList());
+    }
 
     /**
-     * part one of the problem to calculate the power consumption of the submarine
-     * Time complexity: O(n * length(binaryString)) where n is the number of entries in the file
+     * Find the frequency of 1 bits, given a bit position n and a list of binary numbers
+     * @param binaries is the list of binaries from the input file
+     * @param n is the bit position to consider
+     * @return
      */
-    public static Integer partOne() throws URISyntaxException, IOException{
-        int[][] frequency = new int[BINARY_LENGTH][2];  // store frequency of 0's and 1's
-        URI uri = BinaryDiagnostic.class.getClassLoader().getResource("input3.txt").toURI();
-        BufferedReader in = Files.newBufferedReader(Paths.get(uri));
+    public static long frequencyOfOneInBitPositionN(List<String> binaries, int n){
+        int count = 0;
+        return binaries.stream().filter(binary -> binary.charAt(n) == '1').count();
+    }
 
-        String binary = "";
-        while( (binary = in.readLine()) != null){
-            for(int i = 0; i < BINARY_LENGTH; i++){
-                frequency[i][binary.codePointAt(i)-48]++;
-            }
+    /**
+     * Find the frequency of 1 bits, given a bit position n and a list of binary numbers
+     * @param binaries is the list of binaries from the input file
+     * @param n is the bit position to consider
+     * @return
+     */
+    public static long frequencyOfZeroInBitPositionN(List<String> binaries, int n){
+        int count = 0;
+        return binaries.stream().filter(binary -> binary.charAt(n) == '0').count();
+    }
+
+    /**
+     * returns the most frequent bit, given a bit position n, and a list of binary numbers
+     * @param binaries is the list of binaries from the input file
+     * @param n is the bit position to consider
+     * @return
+     */
+    public static char getMostFrequentInBitPositionN(List<String> binaries, int n) {
+        return frequencyOfOneInBitPositionN(binaries,n) > frequencyOfZeroInBitPositionN(binaries,n) ? '1' : '0';
+    }
+
+    /**
+     * get the GammaRate by finding the most common bit in the corresponding position of all numbers in the diagnostic report
+     * Time Complexity O(n*k) where, n is the number of lines in the diagnostic report; k is the length of the binary numbers
+     * @param binaries
+     * @return
+     */
+    public static String getGammaRate(List<String> binaries) {
+        int len = binaries.get(0).length();
+        StringBuilder gammaRate = new StringBuilder();
+
+        for(int i = 0; i < len; i++) {
+            gammaRate.append(getMostFrequentInBitPositionN(binaries,i));
         }
-        in.close();
 
-        StringBuilder gammaBinary = new StringBuilder();
-        StringBuilder epsilonBinary = new StringBuilder();
+        return gammaRate.toString();
+    }
 
-        for(int i = 0; i < BINARY_LENGTH; i++){
-            if(frequency[i][0] > frequency[i][1]){
-                gammaBinary.append(0);
-                epsilonBinary.append(1);
-            }else{
-                gammaBinary.append(1);
-                epsilonBinary.append(0);
-            }
-        }
+    /**
+     * Helper function to invert binaries (e.x - Epsilon is the invert of Gamma; CO2 scrubber rating is invert of oxygen generator rating);
+     * @param binary
+     * @return
+     */
+    public static String invertBinary(String binary){
+        return binary.replace('0','x').replace('1','0').replace('x','1');
+    }
 
-        return Integer.parseInt(gammaBinary.toString(),2) * Integer.parseInt(epsilonBinary.toString(),2);
+    /**
+     * Calculate the power consumption given a list of binaries using generated gamma and epsilon binaries
+     * Time Complexity O(n*k) where, n is the number of lines in the diagnostic report; k is the length of the binary numbers
+     * @param binaries
+     * @return
+     */
+    public static Integer calculatePowerConsumption(List<String> binaries){
+        Integer powerConsumption = 0;
+        if(binaries == null || binaries.isEmpty()) return 0;
+        String gammaRate = getGammaRate(binaries);
+        String epsilonRate = invertBinary(gammaRate);
+        powerConsumption = Integer.parseInt(gammaRate,2) * Integer.parseInt(epsilonRate,2);
+        return powerConsumption;
     }
 
     public static void main(String[] args) {
+       List<String> binaries = null;
         try {
-            Integer res = BinaryDiagnostic.partOne();
-            System.out.println(res);
-        } catch (URISyntaxException | IOException e) {
+            binaries = getDiagnosticReport("input3.txt");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        Integer powerConsumption = BinaryDiagnostic.calculatePowerConsumption(binaries);
+        System.out.println("Power consumption is: " + powerConsumption);
     }
+
 }
