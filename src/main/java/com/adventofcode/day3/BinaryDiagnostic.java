@@ -117,7 +117,7 @@ public class BinaryDiagnostic {
         for(int i = 0; i < bitLength; i++){
             final int bitPos = i;
             char bit = getMostFrequentInBitPositionN(co2Rating,i);
-            co2Rating.removeIf(binary -> binary.charAt(bitPos) == bit);
+            co2Rating.removeIf(binary -> binary.charAt(bitPos) == bit); //O(n) operation
             if(co2Rating.size() == 1) break;
         }
 
@@ -126,6 +126,7 @@ public class BinaryDiagnostic {
 
     /**
      * Life support rating determined by multiplying the CO2 scrubber rating by the oxygen generator rating
+     * Time complexity: O(n*k)
      * @param binaries
      * @return
      */
